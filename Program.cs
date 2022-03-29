@@ -1,57 +1,75 @@
-﻿// See https://aka.ms/new-console-template for more information
-var stackedQueue = new StackedQueue<int>();
+﻿using System;
 
-// TEST CASE 1
-Console.WriteLine("TEST CASE 1");
-Console.WriteLine("-----------");
-stackedQueue.Enqueue(1);
-stackedQueue.Enqueue(2);
-stackedQueue.Enqueue(3);
-Console.WriteLine(stackedQueue.Dequeue());
-Console.WriteLine(stackedQueue.Dequeue());
-Console.WriteLine(stackedQueue.Dequeue());
-// END TEST CASE 1
+namespace StackeQueue {
+	internal class Program {
+		static void Main(string[] args) {
+			var stackedQueue = new StackedQueue<int>();
 
-Console.WriteLine();
-Console.WriteLine();
+			// TEST CASE 1
+			Console.WriteLine("TEST CASE 1");
+			Console.WriteLine("-----------");
+			stackedQueue.Enqueue(1);
+			stackedQueue.Enqueue(2);
+			stackedQueue.Enqueue(3);
+			Console.WriteLine(stackedQueue.Dequeue());
+			Console.WriteLine(stackedQueue.Dequeue());
+			Console.WriteLine(stackedQueue.Dequeue());
+			// END TEST CASE 1
 
-// TEST CASE 2
-Console.WriteLine("TEST CASE 2");
-Console.WriteLine("-----------");
-stackedQueue.Enqueue(1);
-Console.WriteLine(stackedQueue.Dequeue());
-stackedQueue.Enqueue(2);
-Console.WriteLine(stackedQueue.Dequeue());
-stackedQueue.Enqueue(3);
-Console.WriteLine(stackedQueue.Dequeue());
-// END TEST CASE 3
+			Console.WriteLine();
+			Console.WriteLine();
 
-Console.WriteLine();
-Console.WriteLine();
+			// TEST CASE 2
+			Console.WriteLine("TEST CASE 2");
+			Console.WriteLine("-----------");
+			stackedQueue.Enqueue(1);
+			Console.WriteLine(stackedQueue.Dequeue());
+			stackedQueue.Enqueue(2);
+			Console.WriteLine(stackedQueue.Dequeue());
+			stackedQueue.Enqueue(3);
+			Console.WriteLine(stackedQueue.Dequeue());
+			// END TEST CASE 2
 
-// TEST CASE 2
-Console.WriteLine("TEST CASE 3");
-Console.WriteLine("-----------");
-Console.WriteLine(stackedQueue.Dequeue());
-// END TEST CASE 3
+			Console.WriteLine();
+			Console.WriteLine();
 
-Console.ReadLine();
+			// TEST CASE 3
+			Console.WriteLine("TEST CASE 3");
+			Console.WriteLine("-----------");
+			Console.WriteLine(stackedQueue.Dequeue());
+			// END TEST CASE 3
+
+
+			Console.WriteLine();
+			Console.WriteLine();
+
+			// TEST CASE 4
+			Console.WriteLine("TEST CASE 4");
+			Console.WriteLine("-----------");
+			stackedQueue.Enqueue(1);
+			stackedQueue.Enqueue(2);
+			Console.WriteLine(stackedQueue.Dequeue());
+			stackedQueue.Enqueue(3);
+			stackedQueue.Enqueue(4);
+			Console.WriteLine(stackedQueue.Dequeue());
+			Console.WriteLine(stackedQueue.Dequeue());
+			stackedQueue.Enqueue(5);
+			Console.WriteLine(stackedQueue.Dequeue());
+			Console.WriteLine(stackedQueue.Dequeue());
+			// END TEST CASE 4
+
+			Console.ReadLine();
+		}
+	}
+}
 
 class StackedQueue<T> {
-	private bool isInStack1;
 	private Stack<T> stack1 = new Stack<T>();
 	private Stack<T> stack2 = new Stack<T>();
 
 	public void Enqueue(T item) {
-		if ((stack1.Count == 0) && (stack2.Count == 0)) {
+		if (stack1.Count == 0)
 			stack1.Push(item);
-			isInStack1 = true;
-
-			return;
-		}
-
-		if (isInStack1)
-			stack2.Push(item);
 		else
 			stack2.Push(item);
 	}
@@ -60,18 +78,17 @@ class StackedQueue<T> {
 		if ((stack1.Count == 0) && (stack2.Count == 0))
 			return default(T);
 
-		var inStack = isInStack1 ? stack1 : stack2;
-		var outStack = isInStack1 ? stack2 : stack1;
+		var result = stack1.Pop();
 
-		var result = inStack.Pop();
+		if (stack1.Count == 0) {
+			var stack2Count = stack2.Count;
 
-		for (var i = 0; i < outStack.Count - 1; i++) {
-			var outItem = outStack.Pop();
-			inStack.Push(outItem);
+			for (var i = 0; i < stack2Count; i++) {
+				var outItem = stack2.Pop();
+				stack1.Push(outItem);
+			}
 		}
 
-		isInStack1 = !isInStack1;
-		
 		return result;
 	}
 }
